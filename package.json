@@ -14,11 +14,12 @@
       "config": "config.js"
     }
   },
-  "dependencies-comment": {
-    "wmbus-client": "https://github.com/sunsetdk/wmbus-client/tarball/master"
-  },
   "dependencies": {
     "serialport": "^7.1.0",
+    "wmbus-client": "https://github.com/sunsetdk/wmbus-client/tarball/master"
+  },
+  "dependencies-develop": {
+    
     "wmbus-client": "file:../wmbus-client/wmbus-client"
   }
 }

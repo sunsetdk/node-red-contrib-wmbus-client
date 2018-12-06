@@ -1,5 +1,5 @@
 {
-  "name": "node-red-contrib-wbus-client",
+  "name": "node-red-contrib-wmbus-client",
   "version": "1.0.0",
   "description": "Node-red implementation of wireless m-bus client",
   "main": "index.js",
@@ -19,7 +19,6 @@
     "wmbus-client": "https://github.com/sunsetdk/wmbus-client/tarball/master"
   },
   "dependencies-develop": {
-    
     "wmbus-client": "file:../wmbus-client/wmbus-client"
   }
 }

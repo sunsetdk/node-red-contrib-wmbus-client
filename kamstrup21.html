@@ -1,0 +1,46 @@
+﻿<script type="text/javascript">
+    RED.nodes.registerType('kamstrup21',{
+        category: 'function',
+        color: '#C0C0C0',
+        defaults: {
+            name: { value: "" },
+            serialnumber: { value: "", required: true, validate: RED.validators.regex(/^[0-9]{8}$/)},
+            wmbusdongle: { value: "", type: "wmbus-dongle" }
+            
+        },
+        credentials: {
+            aeskey: { type:"password"}
+        },
+        inputs:0,
+        outputs:1,
+        icon: "serial.png",
+        label: function() {
+            return this.name||"kamstrup21";
+        },
+        outputLabels: ["Decoded message from kamstrup21 flow meter"],
+
+    });
+</script>
+
+<script type="text/x-red" data-template-name="kamstrup21">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-serialnumber"><i class="icon-tag"></i> Meter serial number</label>
+        <input type="text" id="node-input-serialnumber" placeholder="serialnumber">
+    </div>
+    <div class="form-row">
+        <label for="node-input-aeskey"><i class=" icon-tag"></i> Aes key</label>
+        <input type="password" id="node-input-aeskey">
+    </div>
+    <div class="form-row">
+        <label for="node-input-wmbusdongle"><i class=" icon-tag"></i> Wm-bus dongle</label>
+        <input type="password" id="node-input-wmbusdongle">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="lower-case">
+    <p>A node which extract data from the kamstrup meter.</p>
+</script>

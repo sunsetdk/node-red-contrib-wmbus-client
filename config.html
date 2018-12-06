@@ -1,0 +1,31 @@
+﻿<script type="text/javascript">
+    RED.nodes.registerType('wmbus-dongle', {
+        category: 'config',
+        defaults: {
+            serielport: { value: "com1", required: true },
+            dongletype: { value: "Imst", required: true },
+        },
+        label: function () {
+            return this.dongletype + "@" + this.serielport;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="wmbus-dongle">
+    <div class="form-row">
+        Pick the comport.
+        On windows this is comX e.g. com1.
+        On linux this is something like /dev/ttyS0
+        <br />
+        <label for="node-config-input-serielport"><i class="icon-bookmark"></i> Comport</label>
+        <input type="text" id="node-config-input-serielport">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-dongletype"><i class="icon-bookmark"></i> Port</label>
+        <select id="node-config-input-dongletype">
+            <option value="Imst">Imst iM871A-USB</option>
+            <option value="Amber">Amber AMB8465-M</option>
+        </select>
+
+    </div>
+</script>

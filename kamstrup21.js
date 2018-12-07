@@ -45,12 +45,6 @@ module.exports = function (RED) {
             disableMeterDataCheck: true
         });
 
-        //var SerialPort = require('serialport')
-        //SerialPort.list().then(
-        //    ports => ports.forEach(console.log),
-        //    err => console.error(err)
-        //)
-
 
         node.debug("Setup complete");
         return true;

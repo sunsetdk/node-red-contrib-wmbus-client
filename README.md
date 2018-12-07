@@ -25,7 +25,7 @@ Output looks like this:
 ```
 {
 	"CurrentValue":123.4,
-	"MonthValue":120.2,
+	"MonthStartValue":120.2,
 	"MeterDry": false,
 	"DryDuration": 0 hours,
 	"ReverseFlow": false,
@@ -38,7 +38,7 @@ Output looks like this:
 ```
 
 _CurrentValue_ is the instant value which can be read from the meter display.
-_MonthValue_ is the meter reading at the beginning of the month.
+MonthStartValue is the meter reading at the beginning of the month.
 _MeterDry_ is set if the meter is currently with out water.
 _ReverseFlow_ is set if the water is flowing the wrong way.
 _Burst_ is set if the flow is very high for a relative short time.

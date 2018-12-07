@@ -5,8 +5,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunsetdk/node-red-contrib-wmbus-client.git"
+  },
   "author": "René Jensen",
-  "license": "ISC",
+  "license": "MIT",
   "node-red": {
     "nodes": {
       "kamstrup21": "kamstrup21.js",

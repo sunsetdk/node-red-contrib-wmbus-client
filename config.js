@@ -15,8 +15,45 @@ module.exports = function (RED) {
             this.wmbusClient.disconnect();
         });
 
+        //var SerialPort = require('serialport')
+        //SerialPort.list(function (err, ports) {
+        //    console.log(node);
+        //    ports.forEach(function (port) {
+        //        node.append($('<option>' + port.comName + '- ' + port.manufacturer + '</option>').attr('value', port.comName));
+        //        console.log('<option>' + port.comName + '- ' + port.manufacturer + '</option>');
+        //    });
+        //});
+
+
+
 
         this.debug("wmbus-client config node started at " + this.serielport);
     }
     RED.nodes.registerType("wmbus-dongle", wmbusdongle);
+    // Make all the available types accessible for the node's config screen
+    RED.httpAdmin.get('/wmbus-client/:cmd', /*RED.auth.needsPermission('unitconverter.read'),*/ function (req, res) {
+        var node = RED.nodes.getNode(req.params.id);
+
+        if (req.params.cmd === "comports") {
+
+            var SerialPort = require('serialport');
+
+            var portNames = [];
+            SerialPort.list(function (err, ports) {
+
+                ports.forEach(function (port) {
+                    portNames.push({
+                        comName: port.comName,
+                        manufacturer: port.manufacturer
+                    });
+                    //portNames.push(port.comName);
+                    //console.log(port.manufacturer);
+                });
+                res.json(portNames);
+            });
+            // Return a list of all available categories (mass, length, ...)
+            
+
+        }
+    });
 }

@@ -3,3 +3,7 @@
 ################################################################################
 
 /bin
+/node_modules
+/obj/Debug
+/.vs/node-red-contrib-wmbus-client/v15
+/node-red-contrib-wmbus-client.njsproj

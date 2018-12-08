@@ -105,16 +105,16 @@ module.exports = function (RED) {
         //generate a payload
         let msg = {
             payload: {
-                CurrentValue: currentValue,
-                MonthStartValue: monthStartValue,
-                MeterDry: infoDry,
-                DryDuration: durationDry,
-                ReverseFlow: infoReverse,
-                ReverseDuration: durationReverse,
-                Burst: infoBurst,
-                BurstDuration: durationBurst,
-                Leak: infoLeak,
-                LeakDuration: durationLeak
+                currentValue: currentValue,
+                monthStartValue: monthStartValue,
+                meterDry: infoDry,
+                dryDuration: durationDry,
+                reverseFlow: infoReverse,
+                reverseDuration: durationReverse,
+                burst: infoBurst,
+                burstDuration: durationBurst,
+                leak: infoLeak,
+                leakDuration: durationLeak
             }
         };
         //Send it

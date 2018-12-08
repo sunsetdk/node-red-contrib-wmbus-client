@@ -12,7 +12,7 @@ Restart Node-RED.
 
 ## Nodes
 ### wmbus-dongle config node
-Setup the type of dongle to use, currenlt 2 different onces are supported. Imst iM871A-USB and Amber AMB8465-M. It might also work with other Amber modules.
+Setup the type of dongle to use, currently 2 different onces are supported. Imst iM871A-USB and Amber AMB8465-M. It might also work with other Amber modules.
 Set the comport assigned to the wmbus dongle.
 
 
@@ -38,7 +38,7 @@ Output looks like this:
 ```
 
 _CurrentValue_ is the instant value which can be read from the meter display.
-MonthStartValue is the meter reading at the beginning of the month.
+_MonthStartValue_ is the meter reading at the beginning of the month.
 _MeterDry_ is set if the meter is currently with out water.
 _ReverseFlow_ is set if the water is flowing the wrong way.
 _Burst_ is set if the flow is very high for a relative short time.

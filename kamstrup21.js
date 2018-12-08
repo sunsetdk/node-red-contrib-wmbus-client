@@ -65,7 +65,6 @@ module.exports = function (RED) {
     function NewData(telegram, aesKey, serialNo, node) {
         //process the meter
         meter.processTelegramData(telegram, { aes: aesKey });
-        console.log(Date.now() + " Data in");
         //Check if this package fits the serial number, if not find the first package which fits and use that as filter
         if (!filterApplied) {
 

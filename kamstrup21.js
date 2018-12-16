@@ -63,8 +63,10 @@ module.exports = function (RED) {
     }
 
     function NewData(telegram, aesKey, serialNo, node) {
-        //process the meter
-        meter.processTelegramData(telegram, { aes: aesKey });
+        //process the meter, if it can't be processed then exit
+        if (!meter.processTelegramData(telegram, { aes: aesKey }))
+            return;
+
         //Check if this package fits the serial number, if not find the first package which fits and use that as filter
         if (!filterApplied) {
 
@@ -87,10 +89,7 @@ module.exports = function (RED) {
                 
 
         }
-        //if a target vale is not defined the exit
-        if (!meter.getMeterTargetValue(telegram))
-            return;
-
+    
         let infoDry = meter.getInfoCodeDry(telegram);
         let infoReverse = meter.getInfoCodeReverse(telegram);
         let infoBurst = meter.getInfoCodeBurst(telegram);

@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-wmbus-client",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Node-red implementation of wireless m-bus client",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,7 @@
   "node-red": {
     "nodes": {
       "kamstrup21": "kamstrup21.js",
+      "hummie1": "hummie1.js",
       "config": "config.js"
     }
   },

@@ -1,6 +1,5 @@
 ﻿var wmbus = require('wmbus-client')
-var meter = new wmbus.KamstrupMultical21Meter();
-var filterApplied = false;
+
 module.exports = function (RED) {
 
     //configure the node
@@ -9,7 +8,9 @@ module.exports = function (RED) {
         //get the configuration
         let dongleConfig = RED.nodes.getNode(config.wmbusdongle);
 
+        node.filterApplied = false;
         node.serialnumber = config.serialnumber;
+        node.meter = new wmbus.KamstrupMultical21Meter();
 
 
         //If nothing was configured then exit with false
@@ -21,7 +22,7 @@ module.exports = function (RED) {
         let client = dongleConfig.wmbusClient;
 
         client.on("connected", function () {
-            if (filterApplied)
+            if (node.filterApplied)
                 node.status({ fill: "green", shape: "dot", text: "connected" });
             else
                 node.status({ fill: "yellow", shape: "dot", text: "Applying filter for serial no: " + node.serialnumber});
@@ -41,7 +42,7 @@ module.exports = function (RED) {
         
 
         //let all packages get handled by this meter
-        meter.applySettings({
+        node.meter.applySettings({
             disableMeterDataCheck: true
         });
 
@@ -65,7 +66,7 @@ module.exports = function (RED) {
     function NewData(telegram, aesKey, serialNo, node) {
         try {
             //process the meter, if it can't be processed then exit
-            if (!meter.processTelegramData(telegram, { aes: aesKey }))
+            if (!node.meter.processTelegramData(telegram, { aes: aesKey }))
                 return;
         } catch (e) {
             node.error(e);
@@ -74,19 +75,19 @@ module.exports = function (RED) {
         
 
         //Check if this package fits the serial number, if not find the first package which fits and use that as filter
-        if (!filterApplied) {
+        if (!node.filterApplied) {
 
             //Check if the serial number of this meter match the supplied, if yes then apply the filter
-            var thisSerialNo = reverseBuffer(meter.getAddressField(telegram).slice(2, 6)).toString("hex");
+            var thisSerialNo = reverseBuffer(node.meter.getAddressField(telegram).slice(2, 6)).toString("hex");
             if (thisSerialNo == serialNo) {
 
-                meter.applySettings({
+                node.meter.applySettings({
                     disableMeterDataCheck: true,
-                    filter: [meter.getAddressField(telegram).toString("hex")]
+                    filter: [node.meter.getAddressField(telegram).toString("hex")]
                 });
                 node.log("Found serial and applied filter.");
                 node.status({ fill: "green", shape: "dot", text: "connected" });
-                filterApplied = true;
+                node.filterApplied = true;
             }
             else {
                 node.log(thisSerialNo + " is not the correct serial no for this node");
@@ -96,17 +97,16 @@ module.exports = function (RED) {
 
         }
     
-        let infoDry = meter.getInfoCodeDry(telegram);
-        let infoReverse = meter.getInfoCodeReverse(telegram);
-        let infoBurst = meter.getInfoCodeBurst(telegram);
-        let infoLeak = meter.getInfoCodeLeak(telegram);
-        let durationDry = meter.getInfoCodeDryDuration(telegram);
-        let durationReverse = meter.getInfoCodeReverseDuration(telegram);
-        let durationBurst = meter.getInfoCodeBurstDuration(telegram);
-        let durationLeak = meter.getInfoCodeLeakDuration(telegram);
-        let currentValue = meter.getMeterValue(telegram);
-        let monthStartValue = meter.getMeterTargetValue(telegram);
-        let sn = meter.getAddressField(telegram).toString('hex');
+        let infoDry = node.meter.getInfoCodeDry(telegram);
+        let infoReverse = node.meter.getInfoCodeReverse(telegram);
+        let infoBurst = node.meter.getInfoCodeBurst(telegram);
+        let infoLeak = node.meter.getInfoCodeLeak(telegram);
+        let durationDry = node.meter.getInfoCodeDryDuration(telegram);
+        let durationReverse = node.meter.getInfoCodeReverseDuration(telegram);
+        let durationBurst = node.meter.getInfoCodeBurstDuration(telegram);
+        let durationLeak = node.meter.getInfoCodeLeakDuration(telegram);
+        let currentValue = node.meter.getMeterValue(telegram);
+        let monthStartValue = node.meter.getMeterTargetValue(telegram);
         //generate a payload
         let msg = {
             payload: {

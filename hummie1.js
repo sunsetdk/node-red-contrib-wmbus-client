@@ -1,6 +1,5 @@
 var wmbus = require('wmbus-client')
-var meter = new wmbus.Hummie1Meter();
-var filterApplied = false;
+
 module.exports = function (RED) {
 
     //configure the node
@@ -9,9 +8,10 @@ module.exports = function (RED) {
         //get the configuration
         let dongleConfig = RED.nodes.getNode(config.wmbusdongle);
 
+        node.filterApplied = false;
         node.serialnumber = config.serialnumber;
-
-
+        node.meter = new wmbus.Hummie1Meter();
+      
         //If nothing was configured then exit with false
         if (!dongleConfig) {
             node.debug("No config for wmbus");
@@ -21,7 +21,7 @@ module.exports = function (RED) {
         let client = dongleConfig.wmbusClient;
 
         client.on("connected", function () {
-            if (filterApplied)
+            if (node.filterApplied)
                 node.status({ fill: "green", shape: "dot", text: "connected" });
             else
                 node.status({ fill: "yellow", shape: "dot", text: "Applying filter for serial no: " + node.serialnumber });
@@ -36,12 +36,12 @@ module.exports = function (RED) {
         });
 
         client.on("data", function (telegram) {
-            NewData(telegram, node.credentials.aeskey, node.serialnumber, node);
+            NewData(telegram, node.serialnumber, node);
         });
 
 
         //let all packages get handled by this meter
-        meter.applySettings({
+        node.meter.applySettings({
             disableMeterDataCheck: true
         });
 
@@ -63,23 +63,24 @@ module.exports = function (RED) {
     }
 
     function NewData(telegram, serialNo, node) {
+ 
         //process the meter, if it can't be processed then exit
-        if (!meter.processTelegramData(telegram, { aes: aesKey }))
+        if (!node.meter.processTelegramData(telegram))
             return;
         //Check if this package fits the serial number, if not find the first package which fits and use that as filter
-        if (!filterApplied) {
+        if (!node.filterApplied) {
 
             //Check if the serial number of this meter match the supplied, if yes then apply the filter
-            var thisSerialNo = reverseBuffer(meter.getAddressField(telegram).slice(2, 6)).toString("hex");
+            var thisSerialNo = reverseBuffer(node.meter.getAddressField(telegram).slice(2, 6)).toString("hex");
             if (thisSerialNo == serialNo) {
 
-                meter.applySettings({
+                node.meter.applySettings({
                     disableMeterDataCheck: true,
-                    filter: [meter.getAddressField(telegram).toString("hex")]
+                    filter: [node.meter.getAddressField(telegram).toString("hex")]
                 });
                 node.log("Found serial and applied filter.");
                 node.status({ fill: "green", shape: "dot", text: "connected" });
-                filterApplied = true;
+                node.filterApplied = true;
             }
             else {
                 node.log(thisSerialNo + " is not the correct serial no for this node");
@@ -89,9 +90,9 @@ module.exports = function (RED) {
 
         }
        
-        let temperature = meter.getMeterValue_temp(telegram);
-        let humidity = meter.getMeterValue_hum(telegram);
-        let battery = meter.getMeterValue_batt(telegram);
+        let temperature = node.meter.getMeterValue_temp(telegram);
+        let humidity = node.meter.getMeterValue_hum(telegram);
+        let battery = node.meter.getMeterValue_batt(telegram);
         
         //generate a payload
         let msg = {
@@ -112,6 +113,14 @@ module.exports = function (RED) {
         if (!initNode(this, config))
             return;
 
+        this.on('close', function (removed, done) {
+            if (removed) {
+                // This node has been deleted
+            } else {
+                // This node is being restarted
+            }
+            done();
+        });
 
     }
     RED.nodes.registerType("hummie1", Hummie1Node);

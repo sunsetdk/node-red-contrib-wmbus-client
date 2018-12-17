@@ -10,6 +10,8 @@ module.exports = function (RED) {
 
         node.filterApplied = false;
         node.serialnumber = config.serialnumber;
+        node.name = config.name||"kamstrup21";
+        node.timeoutTime = config.timeout * 1000;
         node.meter = new wmbus.KamstrupMultical21Meter();
 
 
@@ -22,10 +24,7 @@ module.exports = function (RED) {
         let client = dongleConfig.wmbusClient;
 
         client.on("connected", function () {
-            if (node.filterApplied)
-                node.status({ fill: "green", shape: "dot", text: "connected" });
-            else
-                node.status({ fill: "yellow", shape: "dot", text: "Applying filter for serial no: " + node.serialnumber});
+            node.status({ fill: "yellow", shape: "dot", text: "Applying filter for serial no: " + node.serialnumber});
         });
 
         client.on("disconnected", function () {
@@ -93,10 +92,17 @@ module.exports = function (RED) {
                 node.log(thisSerialNo + " is not the correct serial no for this node");
                 return;
             }
-                
 
         }
-    
+        //reset the timeout again
+        clearTimeout(node.timeout);
+        //set the current status
+        node.status({ fill: "green", shape: "dot", text: "connected" });
+        //set a timeout if 
+        node.timeout = setTimeout(() => {
+            node.status({ fill: "yellow", shape: "dot", text: "Timeout, no data" });
+        }, node.timeoutTime);
+
         let infoDry = node.meter.getInfoCodeDry(telegram);
         let infoReverse = node.meter.getInfoCodeReverse(telegram);
         let infoBurst = node.meter.getInfoCodeBurst(telegram);
@@ -119,7 +125,8 @@ module.exports = function (RED) {
                 burst: infoBurst,
                 burstDuration: durationBurst,
                 leak: infoLeak,
-                leakDuration: durationLeak
+                leakDuration: durationLeak,
+                name: node.name
             }
         };
         //Send it

@@ -10,8 +10,10 @@ module.exports = function (RED) {
 
         node.filterApplied = false;
         node.serialnumber = config.serialnumber;
+        node.name = config.name||"hummie1";
+        node.timeoutTime = config.timeout * 1000;
         node.meter = new wmbus.Hummie1Meter();
-      
+
         //If nothing was configured then exit with false
         if (!dongleConfig) {
             node.debug("No config for wmbus");
@@ -21,10 +23,7 @@ module.exports = function (RED) {
         let client = dongleConfig.wmbusClient;
 
         client.on("connected", function () {
-            if (node.filterApplied)
-                node.status({ fill: "green", shape: "dot", text: "connected" });
-            else
-                node.status({ fill: "yellow", shape: "dot", text: "Applying filter for serial no: " + node.serialnumber });
+            node.status({ fill: "yellow", shape: "dot", text: "Applying filter for serial no: " + node.serialnumber });
         });
 
         client.on("disconnected", function () {
@@ -79,7 +78,7 @@ module.exports = function (RED) {
                     filter: [node.meter.getAddressField(telegram).toString("hex")]
                 });
                 node.log("Found serial and applied filter.");
-                node.status({ fill: "green", shape: "dot", text: "connected" });
+                
                 node.filterApplied = true;
             }
             else {
@@ -89,7 +88,16 @@ module.exports = function (RED) {
 
 
         }
-       
+        //reset the timeout again
+        clearTimeout(node.timeout);
+        //set the current status
+        node.status({ fill: "green", shape: "dot", text: "connected" });
+        //set a timeout if 
+        node.timeout = setTimeout(() => {
+            node.status({ fill: "yellow", shape: "dot", text: "Timeout, no data" });
+        }, node.timeoutTime);
+        
+
         let temperature = node.meter.getMeterValue_temp(telegram);
         let humidity = node.meter.getMeterValue_hum(telegram);
         let battery = node.meter.getMeterValue_batt(telegram);
@@ -99,7 +107,8 @@ module.exports = function (RED) {
             payload: {
                 temperature: temperature,
                 humidity: humidity,
-                batteryLevel: battery
+                batteryLevel: battery,
+                name: node.name
             }
         };
         //Send it

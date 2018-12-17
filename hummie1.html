@@ -4,7 +4,8 @@
         color: '#C0C0C0',
         defaults: {
             name: { value: "" },
-            serialnumber: { value: "", required: true, validate: RED.validators.regex(/^[0-9]{8}$/)},
+            serialnumber: { value: "", required: true, validate: RED.validators.regex(/^[0-9]{8}$/) },
+            timeout: { value: 120, required: true, validate: RED.validators.number()},
             wmbusdongle: { value: "", type: "wmbus-dongle" }
 
         },
@@ -29,7 +30,11 @@
         <input type="text" id="node-input-serialnumber" placeholder="serialnumber">
     </div>
     <div class="form-row">
-        <label for="node-input-wmbusdongle"><i class=" icon-tag"></i> Wm-bus dongle</label>
+        <label for="node-input-timeout"><i class="icon-tag"></i> Timeout in seconds</label>
+        <input type="text" id="node-input-timeout" placeholder="timeout">
+    </div>
+    <div class="form-row">
+        <label for="node-input-wmbusdongle"><i class=" icon-tag"></i> Wm-bus dongle (use dropdown if possible)</label>
         <input type="password" id="node-input-wmbusdongle">
     </div>
 </script>

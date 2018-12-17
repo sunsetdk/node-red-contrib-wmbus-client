@@ -4,12 +4,13 @@
         color: '#C0C0C0',
         defaults: {
             name: { value: "" },
-            serialnumber: { value: "", required: true, validate: RED.validators.regex(/^[0-9]{8}$/)},
+            serialnumber: { value: "", required: true, validate: RED.validators.regex(/^[0-9]{8}$/) },
+            timeout: { value: 65, required: true, validate: RED.validators.number() },
             wmbusdongle: { value: "", type: "wmbus-dongle" }
             
         },
         credentials: {
-            aeskey: { type:"password"}
+            aeskey: { type: "password", required: true, validate: RED.validators.regex(/^[0-9A-Fa-f]{32}$/)}
         },
         inputs:0,
         outputs:1,
@@ -34,6 +35,10 @@
     <div class="form-row">
         <label for="node-input-aeskey"><i class=" icon-tag"></i> Aes key</label>
         <input type="password" id="node-input-aeskey">
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="icon-tag"></i> Timeout in seconds</label>
+        <input type="text" id="node-input-timeout" placeholder="timeout">
     </div>
     <div class="form-row">
         <label for="node-input-wmbusdongle"><i class=" icon-tag"></i> Wm-bus dongle</label>

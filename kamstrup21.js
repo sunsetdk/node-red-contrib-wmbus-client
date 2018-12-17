@@ -63,15 +63,21 @@ module.exports = function (RED) {
     }
 
     function NewData(telegram, aesKey, serialNo, node) {
-        //process the meter, if it can't be processed then exit
-        if (!meter.processTelegramData(telegram, { aes: aesKey }))
-            return;
+        try {
+            //process the meter, if it can't be processed then exit
+            if (!meter.processTelegramData(telegram, { aes: aesKey }))
+                return;
+        } catch (e) {
+            node.error(e);
+            node.status({ fill: "red", shape: "dot", text: e.message });
+        }
+        
 
         //Check if this package fits the serial number, if not find the first package which fits and use that as filter
         if (!filterApplied) {
 
             //Check if the serial number of this meter match the supplied, if yes then apply the filter
-            var thisSerialNo =reverseBuffer(meter.getAddressField(telegram).slice(2, 6)).toString("hex");
+            var thisSerialNo = reverseBuffer(meter.getAddressField(telegram).slice(2, 6)).toString("hex");
             if (thisSerialNo == serialNo) {
 
                 meter.applySettings({

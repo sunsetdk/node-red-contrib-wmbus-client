@@ -22,7 +22,7 @@
     }
   },
   "dependencies": {
-    "bitwise-xor": "^0.0.0",
+    "bitwise-xor": "0.0.0",
     "wmbus-client": "https://github.com/sunsetdk/wmbus-client/tarball/master"
   },
   "devDependencies": {

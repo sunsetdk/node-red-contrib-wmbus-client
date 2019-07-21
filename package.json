@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-wmbus-client",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Node-red implementation of wireless m-bus client",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "bitwise-xor": "0.0.0",
-    "wmbus-client": "^0.2.6"
+    "wmbus-client": "^0.2.6",
+    "serialport": "^6.2.2"
   },
   "devDependencies": {
-    "serialport": "^6.2.2"
   },
   "dependencies_develop": {
     "bitwise-xor": "^0.0.0",

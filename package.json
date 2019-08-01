@@ -12,7 +12,9 @@
   "author": "René Jensen",
   "license": "MIT",
   "keywords": [
-    "node-red"
+    "node-red",
+    "kamstrup",
+    "wmbus"
   ],
   "node-red": {
     "nodes": {

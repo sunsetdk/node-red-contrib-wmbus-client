@@ -15,14 +15,7 @@ module.exports = function (RED) {
             this.wmbusClient.disconnect();
         });
 
-        //var SerialPort = require('serialport')
-        //SerialPort.list(function (err, ports) {
-        //    console.log(node);
-        //    ports.forEach(function (port) {
-        //        node.append($('<option>' + port.comName + '- ' + port.manufacturer + '</option>').attr('value', port.comName));
-        //        console.log('<option>' + port.comName + '- ' + port.manufacturer + '</option>');
-        //    });
-        //});
+     
 
 
 
@@ -30,8 +23,8 @@ module.exports = function (RED) {
         this.debug("wmbus-client config node started at " + this.serielport);
     }
     RED.nodes.registerType("wmbus-dongle", wmbusdongle);
-    // Make all the available types accessible for the node's config screen
-    RED.httpAdmin.get('/wmbus-client/:cmd', /*RED.auth.needsPermission('unitconverter.read'),*/ function (req, res) {
+    // Make all the available types accessible for the node's config screen. The html runs on the client, but the host must look for the ports. So scan the ports and return JSON
+    RED.httpAdmin.get('/wmbus-client/:cmd',  function (req, res) {
         var node = RED.nodes.getNode(req.params.id);
 
         if (req.params.cmd === "comports") {
@@ -49,9 +42,9 @@ module.exports = function (RED) {
                     //portNames.push(port.comName);
                     //console.log(port.manufacturer);
                 });
+                // return the port : manufacture for each device found
                 res.json(portNames);
             });
-            // Return a list of all available categories (mass, length, ...)
             
 
         }

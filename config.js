@@ -39,7 +39,7 @@ module.exports = function (RED) {
             var SerialPort = require('serialport');
 
             var portNames = [];
-            SerialPort.list(function (err, ports) {
+            SerialPort.list().then(function (ports) {
 
                 ports.forEach(function (port) {
                     portNames.push({
@@ -50,10 +50,11 @@ module.exports = function (RED) {
                     //console.log(port.manufacturer);
                 });
                 res.json(portNames);
+            })
+            .catch(function(error){
+                this.debug("Unable to get the list of the PORTS");
             });
             // Return a list of all available categories (mass, length, ...)
-            
-
         }
     });
 }

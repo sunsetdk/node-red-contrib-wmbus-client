@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-wmbus-client",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Node-red implementation of wireless m-bus client",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,12 +25,12 @@
   },
   "dependencies": {
     "bitwise-xor": "0.0.0",
-    "wmbus-client": "^0.2.6",
-    "serialport": "^9.0.2"
+    "serialport": "^9.0.2",
+    "wmbus-client": "https://github.com/sunsetdk/wmbus-client.git"
   },
   "devDependencies": {},
   "dependencies_develop": {
     "bitwise-xor": "^0.0.0",
-    "wmbus-client": "file:../../wmbus-client/wmbus-client"
+    "serialport": "https://github.com/sunsetdk/wmbus-client.git"
   }
 }

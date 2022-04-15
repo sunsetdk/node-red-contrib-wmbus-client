@@ -36,14 +36,14 @@ module.exports = function (RED) {
 
         if (req.params.cmd === "comports") {
 
-            var SerialPort = require('serialport');
+            var { SerialPort } = require('serialport');
 
             var portNames = [];
             SerialPort.list().then(function (ports) {
 
                 ports.forEach(function (port) {
                     portNames.push({
-                        comName: port.comName,
+                        comName: port.path,
                         manufacturer: port.manufacturer
                     });
                     //portNames.push(port.comName);

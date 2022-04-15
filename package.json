@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "bitwise-xor": "0.0.0",
-    "serialport": "^9.0.2",
+    "serialport": "^10.4.0",
     "wmbus-client": "https://github.com/sunsetdk/wmbus-client.git"
   },
   "devDependencies": {}

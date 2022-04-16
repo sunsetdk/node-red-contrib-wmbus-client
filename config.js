@@ -31,30 +31,43 @@ module.exports = function (RED) {
     }
     RED.nodes.registerType("wmbus-dongle", wmbusdongle);
     // Make all the available types accessible for the node's config screen
-    RED.httpAdmin.get('/wmbus-client/:cmd', /*RED.auth.needsPermission('unitconverter.read'),*/ function (req, res) {
-        var node = RED.nodes.getNode(req.params.id);
+    //RED.httpAdmin.get('/wmbus-client/:cmd', /*RED.auth.needsPermission('unitconverter.read'),*/ function (req, res) {
+    //    var node = RED.nodes.getNode(req.params.id);
+    //    console.log("test1");
+    //    if (req.params.cmd === "comports") {
 
-        if (req.params.cmd === "comports") {
+    //        var { SerialPort } = require('serialport');
 
-            var { SerialPort } = require('serialport');
+    //        var portNames = [];
+    //        SerialPort.list().then(function (ports) {
 
-            var portNames = [];
-            SerialPort.list().then(function (ports) {
+    //            ports.forEach(function (port) {
+    //                portNames.push({
+    //                    comName: port.path,
+    //                    manufacturer: port.manufacturer
+    //                });
+    //                //portNames.push(port.comName);
+    //                //console.log(port.manufacturer);
+    //            });
+    //            res.json(portNames);
+    //        })
+    //        .catch(function(error){
+    //            this.debug("Unable to get the list of the PORTS");
+    //        });
+    //        // Return a list of all available categories (mass, length, ...)
+    //    }
+    //});
 
-                ports.forEach(function (port) {
-                    portNames.push({
-                        comName: port.path,
-                        manufacturer: port.manufacturer
-                    });
-                    //portNames.push(port.comName);
-                    //console.log(port.manufacturer);
-                });
-                res.json(portNames);
-            })
-            .catch(function(error){
-                this.debug("Unable to get the list of the PORTS");
-            });
-            // Return a list of all available categories (mass, length, ...)
-        }
+    RED.httpAdmin.get("/serialports", RED.auth.needsPermission('serial.read'), function (req, res) {
+        var { SerialPort } = require('serialport');
+        SerialPort.list().then(
+            ports => {
+                const a = ports.map(p => p.path);
+                res.json(a);
+            },
+            err => {
+                res.json([RED._("serial.errors.list")]);
+            }
+        )
     });
 }

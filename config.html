@@ -4,60 +4,54 @@
         defaults: {
             serielport: { value: "", required: true },
             dongletype: { value: "Imst", required: true },
+            serielport1: { value: "Imst", required: true },
         },
         label: function () {
             return this.dongletype + "@" + this.serielport;
         },
         oneditprepare: function () {
             var node = this;
-            
-            $.getJSON('wmbus-client/comports', function (data) {
-                // The response is a json array, containing all the available unit categories
-               // data.sort();
-                //$('#node-config-input-serielport').val(data);
 
-
-                // Allow the user to specify the units via the input message
-                //$("<option value='message'> **MESSAGE BASED**</option>").appendTo("#node-input-category");
-
-                //var node = $("#node-config-input-serielport")
-                // Show all available ports in the dropdown
-                for (i = 0; i < data.length; i++) {
-                    var port = data[i];
-                    $("#node-config-input-serielport").append($('<option>' + port.comName + ' - ' + port.manufacturer + '</option>').attr('value', port.comName));
-                }
-                
-                // When a port is already available, make sure it is selected in the dropdown
-                if (node.serielport) {
-                    $("#node-config-input-serielport").val(node.serielport);
-
-                    // Setting the dropdown value from javascript (using val()), won't trigger the change-event automatically
-                   $('#node-config-input-serielport').trigger('change');
-                }
-            });  
+            try {
+                $("#node-config-input-serialport").autocomplete("destroy");
+            } catch (err) {
+            }
+            $("#node-config-lookup-serial").click(function () {
+                $("#node-config-lookup-serial").addClass('disabled');
+                $.getJSON('serialports', function (data) {
+                    $("#node-config-lookup-serial").removeClass('disabled');
+                    var ports = data || [];
+                    $("#node-config-input-serialport").autocomplete({
+                        source: ports,
+                        minLength: 0,
+                        close: function (event, ui) {
+                            $("#node-config-input-serialport").autocomplete("destroy");
+                        }
+                    }).autocomplete("search", "");
+                });
+            });
+         
             //var node = $("#node-config-input-serielport")
             //node.append($('<option>' + 'f' + '- ' + '1' + '</option>').attr('value', 1));
             
         }
     });
+    
 </script>
 
 <script type="text/x-red" data-template-name="wmbus-dongle">
-    <div class="form-row">
-        Pick the comport.
-        On windows this is comX e.g. com1.
-        On linux this is something like /dev/ttyS0
-        <br />
-        <label for="node-config-input-serielport"><i class="icon-bookmark"></i> Comport</label>
-        <!--<input type="text" id="node-config-input-serielport">-->
-        <select id="node-config-input-serielport"></select>
-    </div>
-        <div class="form-row">
-            <label for="node-config-input-dongletype"><i class="icon-bookmark"></i> Type</label>
-            <select id="node-config-input-dongletype">
-                <option value="Imst">Imst iM871A-USB</option>
-                <option value="Amber">Amber AMB8465-M</option>
-            </select>
 
-        </div>
-    </script>
+    <div class="form-row">
+        <label for="node-config-input-serialport"><i class="fa fa-random"></i> <span data-i18n="serial.label.serialport"></span></label>
+        <input type="text" id="node-config-input-serialport" style="width:66%;" data-i18n="[placeholder]serial.placeholder.serialport">
+        <a id="node-config-lookup-serial" class="red-ui-button"><i id="node-config-lookup-serial-icon" class="fa fa-search"></i></a>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-dongletype"><i class="icon-bookmark"></i> Type</label>
+        <select id="node-config-input-dongletype">
+            <option value="Imst">Imst iM871A-USB</option>
+            <option value="Amber">Amber AMB8465-M</option>
+        </select>
+
+    </div>
+</script>
